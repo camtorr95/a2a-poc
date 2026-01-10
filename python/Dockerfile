@@ -4,11 +4,12 @@ WORKDIR /app
 
 # Install Poetry and project dependencies
 RUN pip install --no-cache-dir "poetry==1.8.4"
-COPY pyproject.toml .
+COPY python/pyproject.toml .
+COPY python/poetry.lock ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-root --no-interaction --no-ansi
 
-COPY app ./app
+COPY python/app ./app
 COPY config ./config
 
 ENV PORT=8000

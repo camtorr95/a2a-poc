@@ -12,7 +12,7 @@ uvicorn = { version = "0.30.3", extras = ["standard"] }
 openai = "1.54.3"
 python-dotenv = "1.0.1"
 pyyaml = "6.0.2"
-a2a-sdk = "^0.3.22"
+a2a-sdk = {version = "^0.3.22", extras = ["http-server"]}
 
 [tool.poetry.group.dev.dependencies]
 # Add dev-only tooling here (e.g., pytest, ruff) when needed.

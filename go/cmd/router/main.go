@@ -11,9 +11,12 @@ import (
 
 func main() {
 	endpoints := dispatch.Endpoints{
-		FlightsURL:   envOrDefault("FLIGHTS_AGENT_URL", "http://python-agents:8000"),
-		HotelsURL:    envOrDefault("HOTELS_AGENT_URL", "http://python-agents:8000"),
-		ItineraryURL: envOrDefault("ITINERARY_AGENT_URL", "http://python-agents:8000"),
+		FlightsURL:       envOrDefault("FLIGHTS_AGENT_URL", "http://python-agents:8000"),
+		HotelsURL:        envOrDefault("HOTELS_AGENT_URL", "http://python-agents:8000"),
+		ItineraryURL:     envOrDefault("ITINERARY_AGENT_URL", "http://python-agents:8000"),
+		FlightsCardURL:   envOrDefault("FLIGHTS_AGENT_CARD_URL", ""),
+		HotelsCardURL:    envOrDefault("HOTELS_AGENT_CARD_URL", ""),
+		ItineraryCardURL: envOrDefault("ITINERARY_AGENT_CARD_URL", ""),
 	}
 
 	dispatcher := dispatch.New(endpoints)

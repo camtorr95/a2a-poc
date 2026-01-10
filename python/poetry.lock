@@ -13,11 +13,14 @@ files = [
 ]
 
 [package.dependencies]
+fastapi = {version = ">=0.115.2", optional = true, markers = "extra == \"http-server\""}
 google-api-core = ">=1.26.0"
 httpx = ">=0.28.1"
 httpx-sse = ">=0.4.0"
 protobuf = ">=5.29.5"
 pydantic = ">=2.11.3"
+sse-starlette = {version = "*", optional = true, markers = "extra == \"http-server\""}
+starlette = {version = "*", optional = true, markers = "extra == \"http-server\""}
 
 [package.extras]
 all = ["cryptography (>=43.0.0)", "fastapi (>=0.115.2)", "grpcio (>=1.60)", "grpcio-reflection (>=1.7.0)", "grpcio-tools (>=1.60)", "opentelemetry-api (>=1.33.0)", "opentelemetry-sdk (>=1.33.0)", "pyjwt (>=2.0.0)", "sqlalchemy[aiomysql,asyncio] (>=2.0.0)", "sqlalchemy[aiosqlite,asyncio] (>=2.0.0)", "sqlalchemy[asyncio,postgresql-asyncpg] (>=2.0.0)", "sse-starlette", "starlette"]
@@ -956,6 +959,27 @@ files = [
 ]
 
 [[package]]
+name = "sse-starlette"
+version = "3.0.3"
+description = "SSE plugin for Starlette"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "sse_starlette-3.0.3-py3-none-any.whl", hash = "sha256:af5bf5a6f3933df1d9c7f8539633dc8444ca6a97ab2e2a7cd3b6e431ac03a431"},
+    {file = "sse_starlette-3.0.3.tar.gz", hash = "sha256:88cfb08747e16200ea990c8ca876b03910a23b547ab3bd764c0d8eb81019b971"},
+]
+
+[package.dependencies]
+anyio = ">=4.7.0"
+
+[package.extras]
+daphne = ["daphne (>=4.2.0)"]
+examples = ["aiosqlite (>=0.21.0)", "fastapi (>=0.115.12)", "sqlalchemy[asyncio] (>=2.0.41)", "starlette (>=0.49.1)", "uvicorn (>=0.34.0)"]
+granian = ["granian (>=2.3.1)"]
+uvicorn = ["uvicorn (>=0.34.0)"]
+
+[[package]]
 name = "starlette"
 version = "0.40.0"
 description = "The little ASGI library that shines."
@@ -1327,4 +1351,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "be6e8fcbc30cde05b25719d4560ee5f9b4199cc3960b115cecf1079d1b6537ae"
+content-hash = "b9ba1a8d994b70f73f91d689921f296882d98d119c2a5b98ad9bea2617e87b58"

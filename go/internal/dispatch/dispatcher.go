@@ -16,9 +16,12 @@ import (
 )
 
 type Endpoints struct {
-	FlightsURL   string
-	HotelsURL    string
-	ItineraryURL string
+	FlightsURL       string
+	FlightsCardURL   string
+	HotelsURL        string
+	HotelsCardURL    string
+	ItineraryURL     string
+	ItineraryCardURL string
 }
 
 // Dispatcher resolves tasks to agent URLs and forwards envelopes.
@@ -45,22 +48,22 @@ func (d *Dispatcher) Route(ctx context.Context, req a2a.Request) (a2a.Response, 
 	return d.forward(ctx, agentURL, agentName, req)
 }
 
-func (d *Dispatcher) pickAgent(task string) (url string, name string) {
+func (d *Dispatcher) pickAgent(task string) (url string, card string, name string) {
 	switch strings.ToLower(task) {
 	case "flights", "flight":
-		return d.endpoints.FlightsURL, "flights"
+		return d.endpoints.FlightsURL, d.firstNonEmpty(d.endpoints.FlightsCardURL, d.cardURL(d.endpoints.FlightsURL)), "flights"
 	case "hotels", "hotel", "lodging":
-		return d.endpoints.HotelsURL, "hotels"
+		return d.endpoints.HotelsURL, d.firstNonEmpty(d.endpoints.HotelsCardURL, d.cardURL(d.endpoints.HotelsURL)), "hotels"
 	case "itinerary", "plan":
-		return d.endpoints.ItineraryURL, "itinerary"
+		return d.endpoints.ItineraryURL, d.firstNonEmpty(d.endpoints.ItineraryCardURL, d.cardURL(d.endpoints.ItineraryURL)), "itinerary"
 	default:
 		// Graceful fallback to itinerary.
-		return d.endpoints.ItineraryURL, "itinerary"
+		return d.endpoints.ItineraryURL, d.firstNonEmpty(d.endpoints.ItineraryCardURL, d.cardURL(d.endpoints.ItineraryURL)), "itinerary"
 	}
 }
 
-func (d *Dispatcher) forward(ctx context.Context, agentURL, agentName string, req a2a.Request) (a2a.Response, error) {
-	client, err := d.ensureClient(ctx, agentName, agentURL)
+func (d *Dispatcher) forward(ctx context.Context, agentURL, cardURL, agentName string, req a2a.Request) (a2a.Response, error) {
+	client, err := d.ensureClient(ctx, agentName, cardURL)
 	if err != nil {
 		return a2a.Response{}, fmt.Errorf("client init: %w", err)
 	}
@@ -101,7 +104,7 @@ func (d *Dispatcher) forward(ctx context.Context, agentURL, agentName string, re
 	}.WithTrace(agentName), nil
 }
 
-func (d *Dispatcher) ensureClient(ctx context.Context, agentName, baseURL string) (*a2aclient.Client, error) {
+func (d *Dispatcher) ensureClient(ctx context.Context, agentName, cardURL string) (*a2aclient.Client, error) {
 	d.mu.Lock()
 	if client, ok := d.clients[agentName]; ok {
 		d.mu.Unlock()
@@ -109,7 +112,6 @@ func (d *Dispatcher) ensureClient(ctx context.Context, agentName, baseURL string
 	}
 	d.mu.Unlock()
 
-	cardURL := strings.TrimSuffix(baseURL, "/") + "/.well-known/agent-card.json"
 	card, err := agentcard.DefaultResolver.Resolve(ctx, cardURL)
 	if err != nil {
 		return nil, fmt.Errorf("resolve agent card: %w", err)
@@ -136,4 +138,17 @@ func toResultMap(event sdka2a.SendMessageResult) (map[string]interface{}, error)
 		return nil, err
 	}
 	return out, nil
+}
+
+func (d *Dispatcher) cardURL(base string) string {
+	return strings.TrimSuffix(base, "/") + "/.well-known/agent-card.json"
+}
+
+func (d *Dispatcher) firstNonEmpty(values ...string) string {
+	for _, v := range values {
+		if strings.TrimSpace(v) != "" {
+			return v
+		}
+	}
+	return ""
 }

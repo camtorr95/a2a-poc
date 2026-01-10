@@ -20,12 +20,6 @@ class OpenAISettings(BaseModel):
     default: OpenAIModelConfig
     models: Dict[str, OpenAIModelConfig] = Field(default_factory=dict)
 
-    @validator("api_key")
-    def require_api_key(cls, value: str) -> str:
-        if not value:
-            raise ValueError("OPENAI_API_KEY is required. Set it in your .env file.")
-        return value
-
 
 class Settings(BaseModel):
     openai: OpenAISettings
@@ -41,7 +35,16 @@ def load_settings(config_path: Optional[str] = None) -> Settings:
       - OPENAI_CONFIG_PATH (optional path to YAML)
     """
     load_dotenv()
-    cfg_path = Path(config_path or os.getenv("OPENAI_CONFIG_PATH", "config/openai.yaml"))
+    if config_path:
+        cfg_path = Path(config_path)
+    elif os.getenv("OPENAI_CONFIG_PATH"):
+        cfg_path = Path(os.getenv("OPENAI_CONFIG_PATH", ""))
+    else:
+        # Try relative to CWD, then project root.
+        cwd_path = Path("config/openai.yaml")
+        root_fallback = Path(__file__).resolve().parents[3] / "config/openai.yaml"
+        cfg_path = cwd_path if cwd_path.exists() else root_fallback
+
     if not cfg_path.exists():
         raise FileNotFoundError(f"OpenAI config not found at {cfg_path}")
 
@@ -56,7 +59,7 @@ def load_settings(config_path: Optional[str] = None) -> Settings:
     }
 
     openai_settings = OpenAISettings(
-        api_key=os.getenv("OPENAI_API_KEY", ""),
+        api_key=os.getenv("OPENAI_API_KEY", "dummy-key"),
         base_url=os.getenv("OPENAI_BASE_URL"),
         organization=os.getenv("OPENAI_ORG"),
         default=default_cfg,
