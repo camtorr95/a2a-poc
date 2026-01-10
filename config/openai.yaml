@@ -1,0 +1,21 @@
+openai:
+  # Default model used when a task-specific model is not defined.
+  default:
+    model: gpt-4o-mini
+    temperature: 0.3
+    max_tokens: 512
+
+  # Optional per-task overrides keyed by task name.
+  models:
+    flights:
+      model: gpt-4o-mini
+      temperature: 0.2
+      max_tokens: 300
+    hotels:
+      model: gpt-4o-mini
+      temperature: 0.35
+      max_tokens: 400
+    itinerary:
+      model: gpt-4o
+      temperature: 0.6
+      max_tokens: 800

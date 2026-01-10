@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "travel-agents"
+version = "0.1.0"
+description = "Multi-agent travel assistant agents (FastAPI) for the A2A/MCP PoC."
+authors = ["Your Name <you@example.com>"]
+package-mode = true
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "0.115.2"
+uvicorn = { version = "0.30.3", extras = ["standard"] }
+openai = "1.54.3"
+python-dotenv = "1.0.1"
+pyyaml = "6.0.2"
+a2a-sdk = "^0.3.22"
+
+[tool.poetry.group.dev.dependencies]
+# Add dev-only tooling here (e.g., pytest, ruff) when needed.
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"
