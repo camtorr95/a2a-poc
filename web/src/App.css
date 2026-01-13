@@ -1,0 +1,149 @@
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0c0d10;
+  color: #e8e9ec;
+}
+
+body {
+  margin: 0;
+  background: #0c0d10;
+}
+
+#root {
+  margin: 0 auto;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  color: #e8e9ec;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.subhead {
+  margin: 4px 0 0;
+  color: #8e95a3;
+}
+
+.ids {
+  display: flex;
+  gap: 12px;
+  color: #8e95a3;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel {
+  background: #13151b;
+  border: 1px solid #1f2230;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+}
+
+.label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+select,
+textarea,
+button {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+textarea {
+  background: #0f1118;
+  color: #e8e9ec;
+  border: 1px solid #232738;
+  border-radius: 8px;
+  padding: 10px;
+  resize: vertical;
+}
+
+select {
+  background: #0f1118;
+  color: #e8e9ec;
+  border: 1px solid #232738;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #2d74ff, #6f9bff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 16px rgba(45, 116, 255, 0.3);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payload {
+  min-height: 180px;
+}
+
+.error {
+  color: #ff9f43;
+  font-size: 13px;
+}
+
+.error-block {
+  margin-top: 12px;
+  background: #2a120f;
+  color: #ffb3a7;
+  border: 1px solid #ff9f43;
+  padding: 12px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+.console {
+  background: #0b0c12;
+  color: #9ef7a1;
+  border: 1px solid #1f2230;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 200px;
+  max-height: 420px;
+  overflow: auto;
+  box-shadow: inset 0 0 0 1px #0f1118;
+}
+
+.placeholder {
+  color: #8e95a3;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

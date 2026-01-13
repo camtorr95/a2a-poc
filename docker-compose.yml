@@ -7,8 +7,11 @@ services:
       - "8080:8080"
     environment:
       - FLIGHTS_AGENT_URL=http://python-agents:8000
+      - FLIGHTS_AGENT_CARD_URL=http://python-agents:8000/.well-known/agent-card.json
       - HOTELS_AGENT_URL=http://python-agents:8000
+      - HOTELS_AGENT_CARD_URL=http://python-agents:8000/.well-known/agent-card.json
       - ITINERARY_AGENT_URL=http://python-agents:8000
+      - ITINERARY_AGENT_CARD_URL=http://python-agents:8000/.well-known/agent-card.json
     depends_on:
       - python-agents
 

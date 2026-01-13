@@ -40,25 +40,25 @@ func New(endpoints Endpoints) *Dispatcher {
 
 // Route selects the agent URL and performs the downstream call.
 func (d *Dispatcher) Route(ctx context.Context, req a2a.Request) (a2a.Response, error) {
-	agentURL, agentName := d.pickAgent(req.Task)
-	if agentURL == "" {
+	agentURL, cardURL, agentName := d.pickAgent(req.Task)
+	if agentURL == "" || cardURL == "" {
 		return a2a.Response{}, fmt.Errorf("no agent for task")
 	}
 
-	return d.forward(ctx, agentURL, agentName, req)
+	return d.forward(ctx, agentURL, cardURL, agentName, req)
 }
 
 func (d *Dispatcher) pickAgent(task string) (url string, card string, name string) {
 	switch strings.ToLower(task) {
 	case "flights", "flight":
-		return d.endpoints.FlightsURL, d.firstNonEmpty(d.endpoints.FlightsCardURL, d.cardURL(d.endpoints.FlightsURL)), "flights"
+		return d.endpoints.FlightsURL, d.normalizeCard(d.endpoints.FlightsCardURL, d.endpoints.FlightsURL), "flights"
 	case "hotels", "hotel", "lodging":
-		return d.endpoints.HotelsURL, d.firstNonEmpty(d.endpoints.HotelsCardURL, d.cardURL(d.endpoints.HotelsURL)), "hotels"
+		return d.endpoints.HotelsURL, d.normalizeCard(d.endpoints.HotelsCardURL, d.endpoints.HotelsURL), "hotels"
 	case "itinerary", "plan":
-		return d.endpoints.ItineraryURL, d.firstNonEmpty(d.endpoints.ItineraryCardURL, d.cardURL(d.endpoints.ItineraryURL)), "itinerary"
+		return d.endpoints.ItineraryURL, d.normalizeCard(d.endpoints.ItineraryCardURL, d.endpoints.ItineraryURL), "itinerary"
 	default:
 		// Graceful fallback to itinerary.
-		return d.endpoints.ItineraryURL, d.firstNonEmpty(d.endpoints.ItineraryCardURL, d.cardURL(d.endpoints.ItineraryURL)), "itinerary"
+		return d.endpoints.ItineraryURL, d.normalizeCard(d.endpoints.ItineraryCardURL, d.endpoints.ItineraryURL), "itinerary"
 	}
 }
 
@@ -151,4 +151,11 @@ func (d *Dispatcher) firstNonEmpty(values ...string) string {
 		}
 	}
 	return ""
+}
+
+func (d *Dispatcher) normalizeCard(explicit, base string) string {
+	if strings.TrimSpace(explicit) != "" {
+		return strings.TrimSpace(explicit)
+	}
+	return strings.TrimSuffix(base, "/")
 }
